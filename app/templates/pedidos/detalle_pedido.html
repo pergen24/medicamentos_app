@@ -1,0 +1,38 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>📦 Detalle del Pedido #{{ pedido.id }}</h2>
+    <p><strong>Fecha:</strong> {{ pedido.fecha.strftime("%d/%m/%Y %H:%M") }}</p>
+    <p><strong>Estado:</strong> {{ pedido.estado }}</p>
+    <hr>
+
+    {% for factura in pedido.facturas %}
+        <h4>Farmacia: {{ factura.farmacia.nombre }}</h4>
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th>Medicamento</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unit.</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in factura.items %}
+                <tr>
+                    <td>{{ item.medicamento.nombre_local }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>{{ item.precio_unitario }} CFA</td>
+                    <td>{{ item.subtotal }} CFA</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-end"><strong>Total factura:</strong> {{ factura.total }} CFA</p>
+        <hr>
+    {% endfor %}
+
+    <a href="{{ url_for('pedidos.mis_pedidos') }}" class="btn btn-secondary">← Volver a mis pedidos</a>
+</div>
+{% endblock %}

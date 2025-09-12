@@ -1,0 +1,18 @@
+{% extends "base1.html" %}
+
+{% block title %}Detalle Medicamento - EGMed{% endblock %}
+
+{% block content %}
+<h2>{{ medicamento.nombre_local }}</h2>
+<ul>
+    <li><strong>Fabricante:</strong> {{ medicamento.fabricante or '-' }}</li>
+    <li><strong>Forma farmacéutica:</strong> {{ medicamento.forma_farmaceutica or '-' }}</li>
+    <li><strong>Concentración:</strong> {{ medicamento.concentracion or '-' }} {{ medicamento.unidad or '' }}</li>
+    <li><strong>Farmacia:</strong> {{ medicamento.farmacia.nombre }}</li>
+    <li><strong>Dirección:</strong> {{ medicamento.farmacia.direccion or '-' }}</li>
+    <li><strong>Precio:</strong> {{ medicamento.precio or 'No disponible' }} FCFA</li>
+    <li><strong>Stock:</strong> {{ medicamento.stock or 'No disponible' }}</li>
+</ul>
+<a href="{{ url_for('pedidos.agregar_carrito', medicamento_id=medicamento.id) }}" class="btn btn-primary">Agregar al carrito</a>
+<a href="{{ url_for('clientes.ver_medicamentos') }}" class="btn btn-secondary">Volver</a>
+{% endblock %}

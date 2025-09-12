@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Pedidos de {{ usuario.nombre }}</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Factura ID</th>
+            <th>Farmacia</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Detalles</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for factura in facturas %}
+        <tr>
+            <td>{{ factura.id }}</td>
+            <td>{{ factura.farmacia.nombre }}</td>
+            <td>{{ factura.fecha.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ factura.total }} FCFA</td>
+            <td>
+                <a href="{{ url_for('pedidos.ver_pedido', pedido_id=factura.pedido_id) }}" class="btn btn-sm btn-primary">Ver</a>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="5">No hay pedidos para este usuario</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('admin.ver_usuarios') }}" class="btn btn-secondary">Volver</a>
+{% endblock %}

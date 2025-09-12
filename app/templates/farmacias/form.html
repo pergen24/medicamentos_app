@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>
+  {% if farmacia %}
+    Editar Farmacia
+  {% else %}
+    Nueva Farmacia
+  {% endif %}
+</h1>
+
+<form method="POST">
+  {# CSRF si usas Flask-WTF #}
+  {# {{ form.hidden_tag() }} #}
+
+  <div class="mb-3">
+    <label>Nombre</label>
+    <input type="text" name="nombre" class="form-control"
+           value="{{ farmacia.nombre if farmacia else '' }}" 
+           placeholder="Ej: Farmacia Central" required>
+  </div>
+
+  <div class="mb-3">
+    <label>Dirección</label>
+    <input type="text" name="direccion" class="form-control"
+           value="{{ farmacia.direccion if farmacia else '' }}"
+           placeholder="Ej: Av. Blaise Diagne 123">
+  </div>
+
+  <div class="mb-3">
+    <label>Teléfono</label>
+    <input type="text" name="telefono" class="form-control"
+           value="{{ farmacia.telefono if farmacia else '' }}"
+           placeholder="+221 77 123 45 67">
+  </div>
+
+  <div class="mb-3">
+    <label>Email</label>
+    <input type="email" name="email" class="form-control"
+           value="{{ farmacia.email if farmacia else '' }}"
+           placeholder="ejemplo@farmacia.sn">
+  </div>
+
+  <!-- Ubicación con mapa -->
+  <div class="mb-3">
+    <label>Ubicación en el mapa</label>
+    <div id="map" style="height: 400px; border: 1px solid #ccc; border-radius: 5px;"></div>
+    <input type="hidden" name="lat" id="lat" value="{{ farmacia.lat if farmacia else '' }}">
+    <input type="hidden" name="lng" id="lng" value="{{ farmacia.lng if farmacia else '' }}">
+    <small class="text-muted">Haz clic en el mapa para seleccionar la ubicación.</small>
+  </div>
+
+  <button type="submit" class="btn btn-success">Guardar</button>
+  <a href="{{ url_for('farmacias.listado') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  var lat = {{ farmacia.lat if farmacia and farmacia.lat else 14.6928 }};
+  var lng = {{ farmacia.lng if farmacia and farmacia.lng else -17.4467 }};
+  var map = L.map('map').setView([lat, lng], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  var marker;
+  if ({{ 'true' if farmacia and farmacia.lat and farmacia.lng else 'false' }}) {
+    marker = L.marker([lat, lng]).addTo(map);
+  }
+
+  map.on('click', function(e) {
+    if (marker) {
+      map.removeLayer(marker);
+    }
+    marker = L.marker(e.latlng).addTo(map);
+    document.getElementById('lat').value = e.latlng.lat;
+    document.getElementById('lng').value = e.latlng.lng;
+  });
+</script>
+{% endblock %}

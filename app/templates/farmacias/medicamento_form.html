@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Agregar medicamento a {{ farmacia.nombre }}</h2>
+
+<form method="POST">
+  <!-- Nombre local -->
+  <div class="mb-3">
+    <label for="nombre_local" class="form-label">Nombre local *</label>
+    <input type="text" class="form-control" id="nombre_local" name="nombre_local" required>
+  </div>
+
+  <!-- Fabricante -->
+  <div class="mb-3">
+    <label for="fabricante" class="form-label">Fabricante</label>
+    <input type="text" class="form-control" id="fabricante" name="fabricante">
+  </div>
+
+  <!-- Forma farmacéutica -->
+  <div class="mb-3">
+    <label for="forma_farmaceutica" class="form-label">Forma farmacéutica</label>
+    <input type="text" class="form-control" id="forma_farmaceutica" name="forma_farmaceutica">
+  </div>
+
+  <!-- Concentración -->
+  <div class="mb-3">
+    <label for="concentracion" class="form-label">Concentración</label>
+    <input type="text" class="form-control" id="concentracion" name="concentracion">
+  </div>
+
+  <!-- Unidad -->
+  <div class="mb-3">
+    <label for="unidad" class="form-label">Unidad</label>
+    <input type="text" class="form-control" id="unidad" name="unidad">
+  </div>
+
+  <!-- Códigos ATC -->
+  <div class="mb-3">
+    <label for="atc_codes" class="form-label">Códigos ATC (escribe para buscar y selecciona)</label>
+    <select class="form-select" name="atc_codes" id="atc_codes" multiple>
+      {% for atc in atc_list %}
+        <option value="{{ atc.code }}">{{ atc.code }} - {{ atc.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- Precio -->
+  <div class="mb-3">
+    <label for="precio" class="form-label">Precio (CFA, €...)</label>
+    <input type="number" step="0.01" min="0" class="form-control" id="precio" name="precio" required>
+  </div>
+
+  <!-- Stock -->
+  <div class="mb-3">
+    <label for="stock" class="form-label">Stock disponible</label>
+    <input type="number" min="0" class="form-control" id="stock" name="stock" required>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base1.html" %}
+
+{% block title %}Listado de Farmacias - EGMed{% endblock %}
+
+{% block content %}
+<h1>Listado de Farmacias</h1>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for f in farmacias %}
+        <tr>
+            <td>{{ f.id }}</td>
+            <td>
+                <a href="{{ url_for('clientes.ver_detalle_farmacia', farmacia_id=f.id) }}">
+                    {{ f.nombre }}
+                </a>
+            </td>
+            <td>{{ f.direccion or '-' }}</td>
+            <td>{{ f.telefono or '-' }}</td>
+            <td>{{ f.email or '-' }}</td>
+            <td>
+                <a href="{{ url_for('clientes.ver_detalle_farmacia', farmacia_id=f.id) }}" class="btn btn-sm btn-secondary">Ver Detalle</a>
+                <a href="{{ url_for('clientes.ver_medicamentos_farmacia', farmacia_id=f.id) }}" class="btn btn-sm btn-info">Ver Medicamentos</a>
+                <a href="{{ url_for('clientes.ver_farmacias') }}" class="btn btn-sm btn-secondary">Volver</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

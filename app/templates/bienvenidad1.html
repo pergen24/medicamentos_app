@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenida - EGMED</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- AOS (Animate on Scroll) -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+      color: white;
+      background: #111;
+    }
+
+    /* Canvas para partículas */
+    #particles-js {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    /* Contenido principal */
+    .content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .content h1 {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 15px rgba(0,0,0,0.7);
+      animation: fadeInUp 1.5s ease-out;
+    }
+
+    .content i {
+      font-size: 100px;
+      margin-bottom: 30px;
+      color: #4CAF50;
+      text-shadow: 0 0 20px #4CAF50, 0 0 40px #2575fc;
+      animation: glow 2s infinite alternate;
+    }
+
+    .btn-listado {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 40px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: white;
+      font-weight: 600;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 50px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .btn-listado:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .footer i {
+      font-size: 28px;
+      color: white;
+      transition: transform 0.3s, color 0.3s;
+      cursor: pointer;
+    }
+
+    .footer i:hover {
+      color: #4CAF50;
+      transform: scale(1.3);
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(50px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px #4CAF50, 0 0 20px #2575fc; }
+      100% { text-shadow: 0 0 30px #4CAF50, 0 0 60px #2575fc; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas de partículas -->
+  <div id="particles-js"></div>
+
+  <!-- Contenido principal -->
+  <div class="content">
+    <h1 data-aos="fade-down">EGMED-APP</h1>
+    <i class="fa-solid fa-capsules" data-aos="zoom-in"></i>
+    <div>
+      <a href="{{ url_for('info.about') }}" class="btn-listado" data-aos="fade-up" data-aos-delay="200">BIENVENIDO A EGMED</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <i class="fab fa-facebook-f"></i>
+    <i class="fab fa-twitter"></i>
+    <i class="fab fa-instagram"></i>
+    <i class="fab fa-linkedin-in"></i>
+  </div>
+
+  <!-- JS Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Inicializar AOS
+    AOS.init({ duration: 1200, once: true });
+
+    // Configuración de partículas
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#ffffff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5, "random": true },
+        "size": { "value": 3, "random": true },
+        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.2, "width": 1 },
+        "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "bounce" }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } },
+        "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } }
+      },
+      "retina_detect": true
+    });
+  </script>
+</body>
+</html>

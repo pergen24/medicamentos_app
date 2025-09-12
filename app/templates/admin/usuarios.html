@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>👥 Lista de Usuarios</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in usuarios %}
+      <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.role }}</td>
+        <td>
+          <a href="{{ url_for('admin.ver_carrito_usuario', usuario_id=u.id) }}" class="btn btn-sm btn-primary">🛒 Ver Pedidos</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

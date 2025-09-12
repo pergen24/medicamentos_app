@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+{% endblock %}
+
+{% block content %}
+<h2>{{ medicamento.nombre }}</h2>
+<p><strong>Fabricante:</strong> {{ medicamento.fabricante }}</p>
+<p><strong>Forma farmacéutica:</strong> {{ medicamento.forma_farmaceutica }}</p>
+<p><strong>Concentración:</strong> {{ medicamento.concentracion }} {{ medicamento.unidad }}</p>
+
+<h3 class="mt-4">Farmacia</h3>
+{% if medicamento.farmacia %}
+  <p><strong>Nombre:</strong> {{ medicamento.farmacia.nombre }}</p>
+  <p><strong>Dirección:</strong> {{ medicamento.farmacia.direccion or '-' }}</p>
+  <p><strong>Teléfono:</strong> {{ medicamento.farmacia.telefono or '-' }}</p>
+  <p><strong>Email:</strong> {{ medicamento.farmacia.email or '-' }}</p>
+
+  <div id="map" style="height: 500px; border: 1px solid #ccc; border-radius: 5px;"></div>
+  <button id="rutaBtn" class="btn btn-primary mt-3">Calcular ruta desde mi ubicación</button>
+{% else %}
+  <div class="alert alert-warning">
+    <em>Este medicamento no está asignado a ninguna farmacia.</em>
+  </div>
+{% endif %}
+
+<a href="{{ url_for('medicamentos.listado') }}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.min.js"></script>
+
+{% if medicamento.farmacia and medicamento.farmacia.lat and medicamento.farmacia.lng %}
+<script>
+  var farmaciaLat = {{ medicamento.farmacia.lat|default(14.6928) }};
+  var farmaciaLng = {{ medicamento.farmacia.lng|default(-17.4467) }};
+
+  var map = L.map('map').setView([farmaciaLat, farmaciaLng], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  var marker = L.marker([farmaciaLat, farmaciaLng]).addTo(map)
+    .bindPopup("{{ medicamento.farmacia.nombre }}<br>{{ medicamento.farmacia.direccion or '' }}")
+    .openPopup();
+
+  var control; // para Leaflet Routing Machine
+
+  document.getElementById('rutaBtn').addEventListener('click', function() {
+    if (!navigator.geolocation) {
+      alert("Geolocalización no soportada por tu navegador");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var userLat = position.coords.latitude;
+      var userLng = position.coords.longitude;
+
+      if (control) {
+        map.removeControl(control);
+      }
+
+      control = L.Routing.control({
+        waypoints: [
+          L.latLng(userLat, userLng),
+          L.latLng(farmaciaLat, farmaciaLng)
+        ],
+        routeWhileDragging: false
+      }).addTo(map);
+
+      map.fitBounds([
+        [userLat, userLng],
+        [farmaciaLat, farmaciaLng]
+      ]);
+    }, function() {
+      alert("No se pudo obtener tu ubicación");
+    });
+  });
+</script>
+{% endif %}
+{% endblock %}

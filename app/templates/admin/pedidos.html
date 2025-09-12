@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📦 Todos los Pedidos</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Usuario</th>
+      <th>Fecha</th>
+      <th>Total</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for f in facturas %}
+      <tr>
+        <td>{{ f.id }}</td>
+        <td>{{ f.usuario.nombre }}</td>
+        <td>{{ f.fecha }}</td>
+        <td>{{ f.total }}</td>
+        <td>
+          <a href="{{ url_for('admin.ver_carrito_usuario', usuario_id=f.usuario_id) }}" class="btn btn-sm btn-primary">👀 Ver</a>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,9 @@
+flask
+flask_sqlalchemy
+psycopg2-binary
+flask-migrate
+pandas
+openpyxl
+requests
+authlib
+Flask-Login

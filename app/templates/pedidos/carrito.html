@@ -1,0 +1,43 @@
+{% extends "base1.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>🛍️ Carrito de Compras</h2>
+    <hr>
+
+    {% if medicamentos %}
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Medicamento</th>
+                    <th>Farmacia</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for med in medicamentos %}
+                <tr>
+                    <td>{{ med.nombre }}</td>
+                    <td>{{ med.farmacia }}</td>
+                    <td>{{ med.precio }} CFA</td>
+                    <td>{{ med.cantidad }}</td>
+                    <td>{{ med.subtotal }} CFA</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h4 class="text-end">💰 Total: <strong>{{ total_global }} CFA</strong></h4>
+
+        <div class="text-end">
+            <a href="{{ url_for('pedidos.confirmar_pedido') }}" class="btn btn-success btn-lg">
+                Confirmar Pedido
+            </a>
+        </div>
+    {% else %}
+        <div class="alert alert-warning">Tu carrito está vacío.</div>
+    {% endif %}
+</div>
+{% endblock %}

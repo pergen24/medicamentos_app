@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🛒 Historial de carritos de todos los usuarios</h2>
+
+{% for factura in facturas %}
+  <div class="mb-4">
+    <h4>Factura #{{ factura.id }} – {{ factura.fecha.strftime('%d/%m/%Y') }}</h4>
+    <p><strong>Cliente:</strong> {{ factura.usuario.nombre }} ({{ factura.usuario.email }})</p>
+    <p><strong>Total:</strong> ${{ factura.total }}</p>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Medicamento</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in factura.items %}
+          <tr>
+            <td>{{ item.medicamento.nombre }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.precio_unitario }}</td>
+            <td>{{ item.subtotal }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p>No hay facturas registradas todavía.</p>
+{% endfor %}
+{% endblock %}

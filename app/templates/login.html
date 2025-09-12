@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EGMED_APP - Iniciar Sesión</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- AOS (Animate on Scroll) -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Partículas animadas */
+    #particles-js {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+    }
+
+    .login-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      padding: 50px 30px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .login-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+
+    .login-card h2 {
+      margin-bottom: 15px;
+      color: #2575fc;
+      font-weight: 700;
+      font-size: 2.5rem;
+    }
+
+    .login-card p {
+      margin-bottom: 25px;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .form-control:focus {
+      border-color: #2575fc;
+      box-shadow: 0 0 0 0.3rem rgba(37,117,252,0.25);
+    }
+
+    .btn-login {
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: white;
+      width: 100%;
+      margin-top: 15px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      padding: 12px;
+      border-radius: 50px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-3px) scale(1.03);
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+    }
+
+    .register-link {
+      margin-top: 15px;
+      display: block;
+      color: #2575fc;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.3s, transform 0.3s;
+    }
+
+    .register-link:hover {
+      color: #6a11cb;
+      text-decoration: underline;
+      transform: scale(1.05);
+    }
+
+    .login-icon {
+      font-size: 70px;
+      color: #2575fc;
+      margin-bottom: 20px;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px #2575fc, 0 0 20px #6a11cb; }
+      100% { text-shadow: 0 0 20px #2575fc, 0 0 40px #6a11cb; }
+    }
+
+    /* AOS animations override */
+    [data-aos] { opacity: 0; transition-property: opacity, transform; }
+  </style>
+</head>
+<body>
+
+  <!-- Partículas -->
+  <div id="particles-js"></div>
+
+  <!-- Login Card -->
+  <div class="login-card" data-aos="fade-up">
+    <i class="fas fa-pills login-icon" data-aos="zoom-in"></i>
+    <h2>EGMED_APP</h2>
+    <p class="text-muted mb-4">Gestión de medicamentos en farmacias</p>
+
+    <form method="post">
+      <div class="mb-3 text-start">
+        <label for="nombre" class="form-label">Usuario</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="email" class="form-label">Correo</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+      </div>
+
+      <button type="submit" class="btn btn-login">Ingresar</button>
+    </form>
+    <a href="{{ url_for('auth.login_keycloak') }}">Login con Keycloak</a>
+
+    <a href="{{ url_for('auth.register') }}" class="register-link">¿No tienes cuenta? Regístrate aquí</a>
+  </div>
+
+  <!-- JS Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    // Inicializar AOS
+    AOS.init({ duration: 1200, once: true });
+
+    // Configuración partículas
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#ffffff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.3, "random": true },
+        "size": { "value": 3, "random": true },
+        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.2, "width": 1 },
+        "move": { "enable": true, "speed": 2, "direction": "none", "out_mode": "bounce" }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } },
+        "modes": { "repulse": { "distance": 100 }, "push": { "particles_nb": 4 } }
+      },
+      "retina_detect": true
+    });
+  </script>
+</body>
+</html>

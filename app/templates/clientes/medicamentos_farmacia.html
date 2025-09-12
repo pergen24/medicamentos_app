@@ -1,0 +1,51 @@
+{% extends "base1.html" %}
+
+{% block title %}Medicamentos en {{ farmacia.nombre }} - EGMed{% endblock %}
+
+{% block content %}
+<h1>Medicamentos disponibles en {{ farmacia.nombre }}</h1>
+<p><strong>Dirección:</strong> {{ farmacia.direccion or '-' }}</p>
+<p><strong>Teléfono:</strong> {{ farmacia.telefono or '-' }}</p>
+<p><strong>Email:</strong> {{ farmacia.email or '-' }}</p>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre local</th>
+            <th>Forma farmacéutica</th>
+            <th>Concentración</th>
+            <th>Unidad</th>
+            <th>Fabricante</th>
+            <th>Precio (FCFA)</th>
+            <th>Stock</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for med in medicamentos %}
+        <tr>
+            <td>{{ med.id }}</td>
+            <td>{{ med.nombre_local }}</td>
+            <td>{{ med.forma_farmaceutica or '-' }}</td>
+            <td>{{ med.concentracion or '-' }}</td>
+            <td>{{ med.unidad or '-' }}</td>
+            <td>{{ med.fabricante or '-' }}</td>
+            <td>{{ med.precio or '-' }}</td>
+            <td>{{ med.stock or '-' }}</td>
+            <td>
+                <a href="{{ url_for('clientes.ver_detalle_medicamento', id=med.id) }}" class="btn btn-sm btn-info">
+                    Detalle
+                </a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="9" class="text-center">No hay medicamentos disponibles</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('clientes.ver_farmacias') }}" class="btn btn-sm btn-secondary">Volver</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Clasificación ATC{% endblock %}
+
+{% macro render_node(node) %}
+  <li>
+    <strong>{{ node.code }}</strong> – {{ node.name }}
+    {% if node.children %}
+      <ul>
+        {% for ch in node.children %}
+          {{ render_node(ch) }}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </li>
+{% endmacro %}
+
+{% block content %}
+<h1 class="h4 mb-3">Clasificación ATC</h1>
+
+<form class="mb-3" method="get" action="{{ url_for('atc.buscar') }}">
+  <div class="input-group">
+    <input type="text" class="form-control" name="q" placeholder="Buscar por nombre o código…">
+    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+  </div>
+</form>
+
+{% if groups %}
+  <ul>
+    {% for g in groups %}
+      {{ render_node(g) }}
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-muted">No hay datos ATC cargados.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Medicamento{% endblock %}
+
+{% block content %}
+<h1 class="h4 mb-4">Crear nuevo medicamento</h1>
+
+<form method="POST" class="row g-3" autocomplete="off">
+  <!-- Nombre local -->
+  <div class="col-md-6">
+    <label class="form-label">Nombre local *</label>
+    <input type="text" class="form-control" name="nombre_local" required>
+  </div>
+
+  <!-- Fabricante -->
+  <div class="col-md-6">
+    <label class="form-label">Fabricante</label>
+    <input type="text" class="form-control" name="fabricante">
+  </div>
+
+  <!-- Forma farmacéutica -->
+  <div class="col-md-4">
+    <label class="form-label">Forma farmacéutica</label>
+    <input type="text" class="form-control" name="forma_farmaceutica">
+  </div>
+
+  <!-- Concentración -->
+  <div class="col-md-3">
+    <label class="form-label">Concentración</label>
+    <input type="text" class="form-control" name="concentracion" placeholder="500">
+  </div>
+
+  <!-- Unidad -->
+  <div class="col-md-2">
+    <label class="form-label">Unidad</label>
+    <input type="text" class="form-control" name="unidad" placeholder="mg">
+  </div>
+
+  <!-- Precio -->
+  <div class="col-md-3">
+    <label class="form-label">Precio (FCFA)</label>
+    <input type="number" step="0.01" class="form-control" name="precio" placeholder="1000" required>
+  </div>
+
+  <!-- Stock -->
+  <div class="col-md-3">
+    <label class="form-label">Stock</label>
+    <input type="number" class="form-control" name="stock" placeholder="10" required>
+  </div>
+
+  <!-- Selector ATC -->
+  <div class="col-12">
+    <label class="form-label">Códigos ATC (escribe para buscar y selecciona)</label>
+    <input type="text" id="atc-search" class="form-control" placeholder="metformina, amoxicilina, A10BA02...">
+    <div id="atc-suggestions" class="list-group position-absolute w-50" style="z-index:1000;"></div>
+
+    <!-- Etiquetas seleccionadas -->
+    <div id="atc-selected" class="mt-2"></div>
+
+    <!-- Campo real que se envía -->
+    <input type="hidden" name="atc_codes" id="atc-codes-hidden" value="">
+  </div>
+
+  <!-- Botones -->
+  <div class="col-12">
+    <button type="submit" class="btn btn-success">Guardar</button>
+    <a href="{{ url_for('medicamentos.listado') }}" class="btn btn-secondary ms-2">Cancelar</a>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  const searchInput = document.getElementById('atc-search');
+  const suggestionsBox = document.getElementById('atc-suggestions');
+  const selectedBox = document.getElementById('atc-selected');
+  const hiddenInput = document.getElementById('atc-codes-hidden');
+
+  let selectedCodes = [];
+
+  function renderSelected() {
+    selectedBox.innerHTML = '';
+    selectedCodes.forEach(codeObj => {
+      const badge = document.createElement('span');
+      badge.className = 'badge bg-primary me-1 mb-1';
+      badge.textContent = codeObj.code;
+      badge.title = codeObj.name;
+      badge.style.cursor = 'pointer';
+      badge.onclick = () => {
+        selectedCodes = selectedCodes.filter(c => c.code !== codeObj.code);
+        renderSelected();
+      };
+      selectedBox.appendChild(badge);
+    });
+    hiddenInput.value = selectedCodes.map(c => c.code).join(',');
+  }
+
+  async function fetchATC(q) {
+    if (!q || q.length < 2) {
+      suggestionsBox.innerHTML = '';
+      return;
+    }
+    try {
+      const resp = await fetch(`/atc/buscar?q=${encodeURIComponent(q)}`);
+      const data = await resp.json();
+      suggestionsBox.innerHTML = '';
+      data.slice(0, 20).forEach(item => {
+        const a = document.createElement('button');
+        a.type = 'button';
+        a.className = 'list-group-item list-group-item-action';
+        a.textContent = `${item.code} – ${item.name}`;
+        a.onclick = () => {
+          if (!selectedCodes.find(c => c.code === item.code)) {
+            selectedCodes.push(item);
+            renderSelected();
+          }
+          suggestionsBox.innerHTML = '';
+          searchInput.value = '';
+        };
+        suggestionsBox.appendChild(a);
+      });
+    } catch(err) {
+      console.error('Error buscando ATC:', err);
+    }
+  }
+
+  searchInput.addEventListener('input', (e) => {
+    fetchATC(e.target.value.trim());
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!suggestionsBox.contains(e.target) && e.target !== searchInput) {
+      suggestionsBox.innerHTML = '';
+    }
+  });
+})();
+</script>
+{% endblock %}

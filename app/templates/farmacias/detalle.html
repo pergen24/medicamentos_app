@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{{ farmacia.nombre }}</h2>
+
+  <p><strong>Dirección:</strong> {{ farmacia.direccion or '-' }}</p>
+  <p><strong>Teléfono:</strong> {{ farmacia.telefono or '-' }}</p>
+  <p><strong>Email:</strong> {{ farmacia.email or '-' }}</p>
+
+  <!-- Mapa -->
+  <div id="map" style="height: 400px; border: 1px solid #ccc; border-radius: 8px;"></div>
+
+  <hr>
+
+  <h3 class="mt-4">Medicamentos disponibles</h3>
+  {% if farmacia.medicamentos %}
+    <table class="table table-striped mt-2">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Forma</th>
+          <th>Concentración</th>
+          <th>Unidad</th>
+          <th>Fabricante</th>
+          <th>Precio (FCFA)</th>
+          <th>Stock</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for med in farmacia.medicamentos %}
+        <tr>
+          <td>{{ med.nombre_local }}</td>
+          <td>{{ med.forma_farmaceutica or '-' }}</td>
+          <td>{{ med.concentracion or '-' }}</td>
+          <td>{{ med.unidad or '-' }}</td>
+          <td>{{ med.fabricante or '-' }}</td>
+          <td>{{ "{:,.0f}".format(med.precio) if med.precio else "-" }}</td>
+          <td>{{ med.stock if med.stock is not none else "-" }}</td>
+          <td>
+            <a href="{{ url_for('farmacias.editar_medicamento', id=med.id) }}" class="btn btn-sm btn-warning">Editar</a>
+            <form action="{{ url_for('farmacias.eliminar_medicamento', id=med.id) }}" method="POST" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar medicamento?');">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay medicamentos registrados en esta farmacia.</p>
+  {% endif %}
+
+  <a href="{{ url_for('farmacias.nuevo_medicamento', farmacia_id=farmacia.id) }}" class="btn btn-primary mt-3">
+    ➕ Agregar medicamento
+  </a>
+
+{% endblock %}
+
+{% block extra_js %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+  var lat = {{ farmacia.lat or 14.6928 }};
+  var lng = {{ farmacia.lng or -17.4467 }};
+
+  var map = L.map('map').setView([lat, lng], 15);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  L.marker([lat, lng]).addTo(map)
+    .bindPopup("{{ farmacia.nombre }}<br>{{ farmacia.direccion or '' }}")
+    .openPopup();
+</script>
+{% endblock %}

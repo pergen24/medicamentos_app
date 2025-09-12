@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Listado de Medicamentos</h1>
+<a href="{{ url_for('medicamentos.nuevo') }}" class="btn btn-primary mb-3">Nuevo medicamento</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Fabricante</th>
+            <th>Forma farmacéutica</th>
+            <th>Concentración</th>
+            <th>Unidad</th>
+            <th>Precio (FCFA)</th>
+            <th>Stock</th>
+            <th>Farmacia</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in medicamentos %}
+        <tr>
+            <td>{{ m.nombre_local }}</td>
+            <td>{{ m.fabricante or '-' }}</td>
+            <td>{{ m.forma_farmaceutica or '-' }}</td>
+            <td>{{ m.concentracion or '-' }}</td>
+            <td>{{ m.unidad or '-' }}</td>
+            <td>{{ m.precio or '-' }}</td>
+            <td>{{ m.stock or '-' }}</td>
+            <td>{{ m.farmacia.nombre if m.farmacia else '-' }}</td>
+            <td>
+                <a href="{{ url_for('medicamentos.detalle', id=m.id) }}" class="btn btn-sm btn-info">
+                  Detalle
+                </a>
+                <a href="{{ url_for('medicamentos.editar', id=m.id) }}" class="btn btn-sm btn-warning">Editar</a>
+                <form action="{{ url_for('medicamentos.eliminar', id=m.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar medicamento?');">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9" class="text-center">No hay medicamentos registrados</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

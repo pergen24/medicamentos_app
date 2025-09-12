@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Medicamentos - MedApp</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      text-align: center;
+    }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .resultado {
+      margin-top: 20px;
+      text-align: left;
+      display: inline-block;
+      width: 500px;
+    }
+    .med-item {
+      padding: 12px;
+      border-bottom: 1px solid #ccc;
+    }
+    .detalle-btn {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 6px 12px;
+      background-color: #2196F3;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .detalle-btn:hover {
+      background-color: #1976D2;
+    }
+    .farmacia {
+      font-style: italic;
+      font-size: 14px;
+      margin-top: 3px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Buscar Medicamentos</h1>
+
+<form method="get" action="{{ url_for('medicamentos.buscar') }}">
+  <input type="text" name="q" placeholder="Escribe el nombre del medicamento" value="{{ query }}">
+  <button type="submit">Buscar</button>
+</form>
+
+{% if medicamentos %}
+  <div class="resultado">
+    {% for med in medicamentos %}
+      <div class="med-item">
+        <strong>{{ med.nombre_local }}</strong> - {{ med.fabricante }}, {{ med.forma_farmaceutica }}, {{ med.concentracion }} {{ med.unidad }}
+        {% if med.farmacia %}
+          <div class="farmacia">Farmacia: {{ med.farmacia.nombre_local }}</div>
+        {% endif %}
+        <a href="{{ url_for('medicamentos.detalle', id=med.id) }}" class="detalle-btn">Ver detalle</a>
+      </div>
+    {% endfor %}
+  </div>
+{% elif query %}
+  <p>No se encontraron medicamentos con el nombre "{{ query }}"</p>
+{% endif %}
+
+</body>
+</html>
+
