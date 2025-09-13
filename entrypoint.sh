@@ -1,16 +1,7 @@
 #!/bin/sh
 
-echo "Esperando que la base de datos esté lista..."
-
-while ! nc -z db 5432; do
-  sleep 1
-done
-
-echo "Base de datos lista. Aplicando migraciones..."
-
-flask db upgrade
+echo "Aplicando migraciones..."
+flask db upgrade || echo "Migraciones ya aplicadas o fallo en la conexión a Neon"
 
 echo "Iniciando aplicación Flask..."
-
-exec flask run --host=0.0.0.0 --port=5000
-
+exec gunicorn -b 0.0.0.0:$PORT run:app
